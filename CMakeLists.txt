@@ -138,7 +138,7 @@ add_custom_command(
 	COMMAND sh src/makelist -h src/vi.c > src/vi.h
 	COMMAND sh src/makelist -fh ${AHDR} > src/fcns.h
 	COMMAND sh src/makelist -fc ${AHDR} > src/func.h
-	COMMAND sh src/makelist -bh ${ASRC} src/vi.h > src/help.h
+	COMMAND sh src/makelist -bh ${ASRC} > src/help.h
 	DEPENDS ${ASRC}
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
