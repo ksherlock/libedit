@@ -120,7 +120,17 @@ $<$<NOT:$<BOOL:HAVE_WCSDUP>>:src/wcsdup.c>
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(src)
 
-add_library(LIBEDIT ${LIBEDIT_SRC} src/common.h)
+# generated headers
+set(GHDR
+	${CMAKE_CURRENT_BINARY_DIR}/common.h
+	${CMAKE_CURRENT_BINARY_DIR}/emacs.h
+	${CMAKE_CURRENT_BINARY_DIR}/vi.h
+	${CMAKE_CURRENT_BINARY_DIR}/fcns.h
+	${CMAKE_CURRENT_BINARY_DIR}/func.h
+	${CMAKE_CURRENT_BINARY_DIR}/help.h
+)
+
+add_library(LIBEDIT ${LIBEDIT_SRC} ${GHDR})
 target_link_libraries(LIBEDIT INTERFACE
 	$<$<BOOL:HAVE_LIBNCURSES>:ncurses>
 	$<$<BOOL:HAVE_LIBCURSES>:curses>
@@ -129,16 +139,17 @@ target_link_libraries(LIBEDIT INTERFACE
 
 target_compile_options(LIBEDIT PRIVATE -g)
 
-set(AHDR src/vi.h src/emacs.h src/common.h)
-set(ASRC src/vi.c src/emacs.c src/common.c)
+set(SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(AHDR vi.h emacs.h common.h)
+set(ASRC ${SRC}/vi.c ${SRC}/emacs.c ${SRC}/common.c)
 add_custom_command(
-	OUTPUT src/common.h src/emacs.h src/vi.h src/fcns.h src/func.h src/help.h
-	COMMAND sh src/makelist -h src/common.c > src/common.h
-	COMMAND sh src/makelist -h src/emacs.c > src/emacs.h
-	COMMAND sh src/makelist -h src/vi.c > src/vi.h
-	COMMAND sh src/makelist -fh ${AHDR} > src/fcns.h
-	COMMAND sh src/makelist -fc ${AHDR} > src/func.h
-	COMMAND sh src/makelist -bh ${ASRC} > src/help.h
+	OUTPUT ${GHDR}
+	COMMAND sh ${SRC}/makelist -h ${SRC}/common.c > common.h
+	COMMAND sh ${SRC}/makelist -h ${SRC}/emacs.c > emacs.h
+	COMMAND sh ${SRC}/makelist -h ${SRC}/vi.c > vi.h
+	COMMAND sh ${SRC}/makelist -fh ${AHDR} > fcns.h
+	COMMAND sh ${SRC}/makelist -fc ${AHDR} > func.h
+	COMMAND sh ${SRC}/makelist -bh ${ASRC} > help.h
 	DEPENDS ${ASRC}
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	# WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
