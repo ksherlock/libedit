@@ -35,7 +35,7 @@ AM_INIT_AUTOMAKE
 AC_PROG_LIBTOOL
 
 # libtool -version-info
-AC_SUBST(LT_VERSION, [0:54:0])
+AC_SUBST(LT_VERSION, [0:55:0])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
