@@ -85,37 +85,38 @@ configure_file(config.h.cmake config.h)
 
 
 set(LIBEDIT_SRC 
-src/chared.c
-src/chartype.c
-src/common.c
-src/el.c
-src/eln.c
-src/emacs.c
-src/filecomplete.c
-src/hist.c
-src/history.c
-src/historyn.c
-src/keymacro.c
-src/map.c
-src/parse.c
-src/prompt.c
-src/read.c
-src/readline.c
-src/refresh.c
-src/search.c
-src/sig.c
-src/terminal.c
-src/tokenizer.c
-src/tokenizern.c
-src/tty.c
-src/vi.c
-$<$<NOT:$<BOOL:HAVE_STRLCAT>>:src/strlcat.c>
-$<$<NOT:$<BOOL:HAVE_STRLCPY>>:src/strlcpy.c>
-$<$<NOT:$<BOOL:HAVE_VIS>>:src/vis.c>
-$<$<NOT:$<BOOL:HAVE_UNVIS>>:src/unvis.c>
-$<$<NOT:$<BOOL:HAVE_WCSDUP>>:src/wcsdup.c>
-)
+	src/chared.c
+	src/chartype.c
+	src/common.c
+	src/el.c
+	src/eln.c
+	src/emacs.c
+	src/filecomplete.c
+	src/hist.c
+	src/history.c
+	src/historyn.c
+	src/keymacro.c
+	src/map.c
+	src/parse.c
+	src/prompt.c
+	src/read.c
+	src/readline.c
+	src/refresh.c
+	src/search.c
+	src/sig.c
+	src/terminal.c
+	src/tokenizer.c
+	src/tokenizern.c
+	src/tty.c
+	src/vi.c
 
+	$<$<NOT:$<BOOL:${HAVE_STRLCAT}>>:src/strlcat.c>
+	$<$<NOT:$<BOOL:${HAVE_STRLCPY}>>:src/strlcpy.c>
+	$<$<NOT:$<BOOL:${HAVE_VIS}>>:src/vis.c>
+	$<$<NOT:$<BOOL:${HAVE_UNVIS}>>:src/unvis.c>
+	$<$<NOT:$<BOOL:${HAVE_WCSDUP}>>:src/wcsdup.c>
+
+)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(src)
@@ -132,9 +133,9 @@ set(GHDR
 
 add_library(LIBEDIT ${LIBEDIT_SRC} ${GHDR})
 target_link_libraries(LIBEDIT INTERFACE
-	$<$<BOOL:HAVE_LIBNCURSES>:ncurses>
-	$<$<BOOL:HAVE_LIBCURSES>:curses>
-	$<$<BOOL:HAVE_LIBTERMCAP>:termcap>
+	$<$<BOOL:${HAVE_LIBNCURSES}>:ncurses>
+	$<$<BOOL:${HAVE_LIBCURSES}>:curses>
+	$<$<BOOL:${HAVE_LIBTERMCAP}>:termcap>
 )
 
 target_compile_options(LIBEDIT PRIVATE -g)
