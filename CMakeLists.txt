@@ -81,8 +81,10 @@ set(PACKAGE_STRING "libedit 3.1")
 
 configure_file(config.h.cmake config.h)
 
-
-
+# copy header files to the build dir.
+# these copy everytime cmake runs.
+file(COPY src/histedit.h DESTINATION include)
+file(COPY src/editline/readline.h DESTINATION include)
 
 set(LIBEDIT_SRC 
 	src/chared.c
@@ -139,6 +141,8 @@ target_link_libraries(LIBEDIT INTERFACE
 )
 
 target_compile_options(LIBEDIT PRIVATE -g)
+
+target_include_directories(LIBEDIT INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 set(SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(AHDR vi.h emacs.h common.h)
