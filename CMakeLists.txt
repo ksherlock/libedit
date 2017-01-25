@@ -133,7 +133,13 @@ set(GHDR
 	${CMAKE_CURRENT_BINARY_DIR}/help.h
 )
 
-add_library(LIBEDIT ${LIBEDIT_SRC} ${GHDR})
+# headers for other people to use.
+set(GINCLUDES
+	${CMAKE_CURRENT_BINARY_DIR}/include/readline.h
+	${CMAKE_CURRENT_BINARY_DIR}/include/histedit.h
+)
+
+add_library(LIBEDIT ${LIBEDIT_SRC} ${GHDR} ${GINCLUDES})
 target_link_libraries(LIBEDIT INTERFACE
 	$<$<BOOL:${HAVE_LIBNCURSES}>:ncurses>
 	$<$<BOOL:${HAVE_LIBCURSES}>:curses>
@@ -157,4 +163,24 @@ add_custom_command(
 	COMMAND sh ${SRC}/makelist -bh ${ASRC} > help.h
 	DEPENDS ${ASRC}
 	# WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# copy header files to the build dir.
+# these should only copy if they actually change.
+# add_custom_command(
+# 	OUTPUT include/readline.h include/histedit.h
+# 	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SRC}/editline/readline.h ${SRC}/histedit.h include
+# 	DEPENDS ${SRC}/editline/readline.h ${SRC}/histedit.h
+# )
+
+add_custom_command(
+	OUTPUT include/readline.h
+	COMMAND ${CMAKE_COMMAND} -E copy ${SRC}/editline/readline.h include
+	DEPENDS ${SRC}/editline/readline.h
+)
+
+add_custom_command(
+	OUTPUT include/histedit.h
+	COMMAND ${CMAKE_COMMAND} -E copy ${SRC}/histedit.h include
+	DEPENDS ${SRC}/histedit.h
 )
