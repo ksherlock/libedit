@@ -1,4 +1,4 @@
-/*	$NetBSD: hist.c,v 1.29 2016/05/09 21:46:56 christos Exp $	*/
+/*	$NetBSD: hist.c,v 1.32 2017/03/05 19:23:58 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -37,7 +37,7 @@
 #if 0
 static char sccsid[] = "@(#)hist.c	8.1 (Berkeley) 6/4/93";
 #else
-__RCSID("$NetBSD: hist.c,v 1.29 2016/05/09 21:46:56 christos Exp $");
+__RCSID("$NetBSD: hist.c,v 1.32 2017/03/05 19:23:58 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 
@@ -46,6 +46,7 @@ __RCSID("$NetBSD: hist.c,v 1.29 2016/05/09 21:46:56 christos Exp $");
  */
 #include <stdlib.h>
 #include <string.h>
+#include <vis.h>
 
 #include "el.h"
 
@@ -101,6 +102,7 @@ hist_get(EditLine *el)
 {
 	const wchar_t *hp;
 	int h;
+	size_t blen, hlen;
 
 	if (el->el_history.eventno == 0) {	/* if really the current line */
 		(void) wcsncpy(el->el_line.buffer, el->el_history.buf,
@@ -126,14 +128,16 @@ hist_get(EditLine *el)
 		return CC_ERROR;
 
 	for (h = 1; h < el->el_history.eventno; h++)
-		if ((hp = HIST_NEXT(el)) == NULL) {
-			el->el_history.eventno = h;
-			return CC_ERROR;
-		}
-	(void) wcsncpy(el->el_line.buffer, hp,
-			(size_t)(el->el_line.limit - el->el_line.buffer));
-	el->el_line.buffer[el->el_line.limit - el->el_line.buffer - 1] = '\0';
-	el->el_line.lastchar = el->el_line.buffer + wcslen(el->el_line.buffer);
+		if ((hp = HIST_NEXT(el)) == NULL)
+			goto out;
+
+	hlen = wcslen(hp) + 1;
+	blen = (size_t)(el->el_line.limit - el->el_line.buffer);
+	if (hlen > blen && !ch_enlargebufs(el, hlen))
+		goto out;
+
+	memcpy(el->el_line.buffer, hp, hlen * sizeof(*hp));
+	el->el_line.lastchar = el->el_line.buffer + hlen - 1;
 
 	if (el->el_line.lastchar > el->el_line.buffer
 	    && el->el_line.lastchar[-1] == '\n')
@@ -149,6 +153,10 @@ hist_get(EditLine *el)
 		el->el_line.cursor = el->el_line.lastchar;
 
 	return CC_REFRESH;
+out:
+	el->el_history.eventno = h;
+	return CC_ERROR;
+
 }
 
 
@@ -166,11 +174,32 @@ hist_command(EditLine *el, int argc, const wchar_t **argv)
 		return -1;
 
 	if (argc == 1 || wcscmp(argv[1], L"list") == 0) {
+		size_t maxlen = 0;
+		char *buf = NULL;
+		int hno = 1;
 		 /* List history entries */
 
-		for (str = HIST_LAST(el); str != NULL; str = HIST_PREV(el))
-			(void) fprintf(el->el_outfile, "%d %s",
-			    el->el_history.ev.num, ct_encode_string(str, &el->el_scratch));
+		for (str = HIST_LAST(el); str != NULL; str = HIST_PREV(el)) {
+			char *ptr =
+			    ct_encode_string(str, &el->el_scratch);
+			size_t len = strlen(ptr);
+			if (len > 0 && ptr[len - 1] == '\n') 
+				ptr[--len] = '\0';
+			len = len * 4 + 1;
+			if (len >= maxlen) {
+				maxlen = len + 1024;
+				char *nbuf = el_realloc(buf, maxlen);
+				if (nbuf == NULL) {
+					el_free(buf);
+					return -1;
+				}
+				buf = nbuf;
+			}
+			strvis(buf, ptr, VIS_NL);
+			(void) fprintf(el->el_outfile, "%d\t%s\n",
+			    hno++, buf);
+		}
+		el_free(buf);
 		return 0;
 	}
 
