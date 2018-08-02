@@ -30,10 +30,10 @@ libedit_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c map.
 							wcsdup.c \
 							tokenizer.c tokenizern.c \
 							history.c historyn.c \
-							filecomplete.c readline.c chared.h el.h hist.h \
+							filecomplete.c readline.c chared.h literal.c el.h hist.h \
 							histedit.h keymacro.h map.h chartype.h parse.h prompt.h read.h refresh.h \
 							search.h sig.h sys.h terminal.h tty.h vis.h filecomplete.h \
-							editline/readline.h
+							editline/readline.h literal.h
 
 if !HAVE_STRLCPY
 libedit_la_SOURCES += strlcpy.c

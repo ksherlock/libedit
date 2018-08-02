@@ -98,6 +98,7 @@ set(LIBEDIT_SRC
 	src/history.c
 	src/historyn.c
 	src/keymacro.c
+	src/literal.c
 	src/map.c
 	src/parse.c
 	src/prompt.c

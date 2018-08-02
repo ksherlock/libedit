@@ -1,6 +1,21 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2018-05-25 Jess Thrysoee
+
+   * version-info: 0:58:0
+
+   * all: sync with upstream source
+
+2017-05-22 Jess Thrysoee
+
+   * version-info: 0:57:0
+
+   * all: sync with upstream source
+
+   * libedit.pc.in: Ncurses should not be a part of public link interface.
+	Patch by Yegor Timoshenko
+
 2017-03-29 Jess Thrysoee
 
    * version-info: 0:56:0
