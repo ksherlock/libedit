@@ -1,4 +1,4 @@
-/*	$NetBSD: readline.c,v 1.146 2018/01/01 22:32:46 christos Exp $	*/
+/*	$NetBSD: readline.c,v 1.148 2018/12/02 16:58:13 christos Exp $	*/
 
 /*-
  * Copyright (c) 1997 The NetBSD Foundation, Inc.
@@ -31,7 +31,7 @@
 
 #include "config.h"
 #if !defined(lint) && !defined(SCCSID)
-__RCSID("$NetBSD: readline.c,v 1.146 2018/01/01 22:32:46 christos Exp $");
+__RCSID("$NetBSD: readline.c,v 1.148 2018/12/02 16:58:13 christos Exp $");
 #endif /* not lint && not SCCSID */
 
 #include <sys/types.h>
@@ -84,7 +84,7 @@ int rl_end = 0;
 char *rl_line_buffer = NULL;
 rl_vcpfunc_t *rl_linefunc = NULL;
 int rl_done = 0;
-VFunction *rl_event_hook = NULL;
+rl_hook_func_t *rl_event_hook = NULL;
 KEYMAP_ENTRY_ARRAY emacs_standard_keymap,
     emacs_meta_keymap,
     emacs_ctlx_keymap;
@@ -433,7 +433,7 @@ readline(const char *p)
 	if (rl_pre_input_hook)
 		(*rl_pre_input_hook)(NULL, 0);
 
-	if (rl_event_hook && !(e->el_flags&NO_TTY)) {
+	if (rl_event_hook && !(e->el_flags & NO_TTY)) {
 		el_set(e, EL_GETCFN, _rl_event_read_char);
 		used_event_hook = 1;
 	}
@@ -2070,15 +2070,12 @@ rl_callback_read_char(void)
 	if (done && rl_linefunc != NULL) {
 		el_set(e, EL_UNBUFFERED, 0);
 		if (done == 2) {
-		    if ((wbuf = strdup(buf)) != NULL)
-			wbuf[count] = '\0';
+			if ((wbuf = strdup(buf)) != NULL)
+				wbuf[count] = '\0';
 		} else
 			wbuf = NULL;
 		(*(void (*)(const char *))rl_linefunc)(wbuf);
-		if (!rl_already_prompted) {
-		    el_set(e, EL_UNBUFFERED, 1);
-		    rl_already_prompted = 1;
-		}
+		el_set(e, EL_UNBUFFERED, 1);
 	}
 }
 
@@ -2413,4 +2410,20 @@ void
 rl_resize_terminal(void)
 {
 	el_resize(e);
+}
+
+void
+rl_reset_after_signal(void)
+{
+	if (rl_prep_term_function)
+		(*rl_prep_term_function)();
+}
+
+void
+rl_echo_signal_char(int sig)
+{
+	int c = tty_get_signal_character(e, sig);
+	if (c == -1)
+		return;
+	re_putc(e, c, 0);
 }

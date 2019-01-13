@@ -251,7 +251,7 @@ fileman_completion (const char* text, int start, int end __attribute__((__unused
       directory. */
    if (start == 0)
       /* TODO */
-      matches = completion_matches (text, command_generator);
+      matches = completion_matches ((char*)text, command_generator);
       /* matches = rl_completion_matches (text, command_generator); */
 
    return (matches);
