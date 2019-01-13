@@ -185,3 +185,13 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy ${SRC}/histedit.h include
 	DEPENDS ${SRC}/histedit.h
 )
+
+# example programs
+add_executable(tc1 examples/tc1.c)
+target_link_libraries(tc1 LIBEDIT)
+
+add_executable(wtc1 examples/wtc1.c)
+target_link_libraries(wtc1 LIBEDIT)
+
+add_executable(fileman examples/fileman.c)
+target_link_libraries(fileman LIBEDIT)
