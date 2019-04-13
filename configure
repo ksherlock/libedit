@@ -586,7 +586,7 @@ MAKEFLAGS=
 
 # Identity of this package.
 PACKAGE_NAME='libedit'
-PACKAGE_TARNAME='libedit-20181209'
+PACKAGE_TARNAME='libedit-20190324'
 PACKAGE_VERSION='3.1'
 PACKAGE_STRING='libedit 3.1'
 PACKAGE_BUGREPORT=''
@@ -1374,7 +1374,7 @@ Fine tuning of the installation directories:
   --localedir=DIR         locale-dependent data [DATAROOTDIR/locale]
   --mandir=DIR            man documentation [DATAROOTDIR/man]
   --docdir=DIR            documentation root
-                          [DATAROOTDIR/doc/libedit-20181209]
+                          [DATAROOTDIR/doc/libedit-20190324]
   --htmldir=DIR           html documentation [DOCDIR]
   --dvidir=DIR            dvi documentation [DOCDIR]
   --pdfdir=DIR            pdf documentation [DOCDIR]
@@ -4223,7 +4223,7 @@ fi
 
 
 # Define the identity of the package.
- PACKAGE='libedit-20181209'
+ PACKAGE='libedit-20190324'
  VERSION='3.1'
 
 
@@ -12118,7 +12118,7 @@ CC=$lt_save_CC
 
 
 # libtool -version-info
-LT_VERSION=0:59:0
+LT_VERSION=0:60:0
 
 
 # Check whether --enable-silent-rules was given.

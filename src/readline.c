@@ -1,4 +1,4 @@
-/*	$NetBSD: readline.c,v 1.148 2018/12/02 16:58:13 christos Exp $	*/
+/*	$NetBSD: readline.c,v 1.151 2019/02/15 23:20:35 christos Exp $	*/
 
 /*-
  * Copyright (c) 1997 The NetBSD Foundation, Inc.
@@ -31,7 +31,7 @@
 
 #include "config.h"
 #if !defined(lint) && !defined(SCCSID)
-__RCSID("$NetBSD: readline.c,v 1.148 2018/12/02 16:58:13 christos Exp $");
+__RCSID("$NetBSD: readline.c,v 1.151 2019/02/15 23:20:35 christos Exp $");
 #endif /* not lint && not SCCSID */
 
 #include <sys/types.h>
@@ -76,7 +76,7 @@ static char empty[] = { '\0' };
 static char expand_chars[] = { ' ', '\t', '\n', '=', '(', '\0' };
 static char break_chars[] = { ' ', '\t', '\n', '"', '\\', '\'', '`', '@', '$',
     '>', '<', '=', ';', '|', '&', '{', '(', '\0' };
-char *rl_readline_name = empty;
+const char *rl_readline_name = empty;
 FILE *rl_instream = NULL;
 FILE *rl_outstream = NULL;
 int rl_point = 0;
@@ -109,7 +109,7 @@ char *history_arg_extract(int start, int end, const char *str);
 
 int rl_inhibit_completion = 0;
 int rl_attempted_completion_over = 0;
-char *rl_basic_word_break_characters = break_chars;
+const char *rl_basic_word_break_characters = break_chars;
 char *rl_completer_word_break_characters = NULL;
 char *rl_completer_quote_characters = NULL;
 rl_compentry_func_t *rl_completion_entry_function = NULL;
@@ -154,7 +154,7 @@ int rl_completion_query_items = 100;
  * in the parsed text when it is passed to the completion function.
  * Shell uses this to help determine what kind of completing to do.
  */
-char *rl_special_prefixes = NULL;
+const char *rl_special_prefixes = NULL;
 
 /*
  * This is the character appended to the completed words if at the end of
@@ -323,7 +323,7 @@ rl_initialize(void)
 		el_end(e);
 		return -1;
 	}
-	el_set(e, EL_PROMPT, _get_prompt, RL_PROMPT_START_IGNORE);
+	el_set(e, EL_PROMPT_ESC, _get_prompt, RL_PROMPT_START_IGNORE);
 	el_set(e, EL_SIGNAL, rl_catch_signals);
 
 	/* set default mode to "emacs"-style and read setting afterwards */
@@ -1594,7 +1594,7 @@ history_list(void)
 		return NULL;
 
 	if ((nlp = el_realloc(_history_listp,
-	    (size_t)history_length * sizeof(*nlp))) == NULL)
+	    ((size_t)history_length + 1) * sizeof(*nlp))) == NULL)
 		return NULL;
 	_history_listp = nlp;
 
@@ -1611,6 +1611,7 @@ history_list(void)
 		if (i++ == history_length)
 			abort();
 	} while (history(h, &ev, H_PREV) == 0);
+	_history_listp[i] = NULL;
 	return _history_listp;
 }
 
@@ -1880,7 +1881,7 @@ int
 rl_complete(int ignore __attribute__((__unused__)), int invoking_key)
 {
 	static ct_buffer_t wbreak_conv, sprefix_conv;
-	char *breakchars;
+	const char *breakchars;
 
 	if (h == NULL || e == NULL)
 		rl_initialize();
@@ -1966,13 +1967,14 @@ rl_read_key(void)
  * reset the terminal
  */
 /* ARGSUSED */
-void
+int
 rl_reset_terminal(const char *p __attribute__((__unused__)))
 {
 
 	if (h == NULL || e == NULL)
 		rl_initialize();
 	el_reset(e);
+	return 0;
 }
 
 
@@ -2161,7 +2163,7 @@ rl_variable_bind(const char *var, const char *value)
 	return el_set(e, EL_BIND, "", var, value, NULL) == -1 ? 1 : 0;
 }
 
-void
+int
 rl_stuff_char(int c)
 {
 	char buf[2];
@@ -2169,6 +2171,7 @@ rl_stuff_char(int c)
 	buf[0] = (char)c;
 	buf[1] = '\0';
 	el_insertstr(e, buf);
+	return 1;
 }
 
 static int
