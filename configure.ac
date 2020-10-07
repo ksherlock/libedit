@@ -35,7 +35,7 @@ AM_INIT_AUTOMAKE
 AC_PROG_LIBTOOL
 
 # libtool -version-info
-AC_SUBST(LT_VERSION, [0:62:0])
+AC_SUBST(LT_VERSION, [0:63:0])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -49,7 +49,9 @@ EL_MANTYPE
 AC_CHECK_LIB(ncurses, tgetent,,
   [AC_CHECK_LIB(curses, tgetent,,
     [AC_CHECK_LIB(termcap, tgetent,,
-      [AC_MSG_ERROR([libncurses, libcurses, or libtermcap is required!])]
+      [AC_CHECK_LIB(tinfo, tgetent,,
+        [AC_MSG_ERROR([libncurses, libcurses, libtermcap or libtinfo is required!])]
+      )]
     )]
   )]
 )

@@ -51,6 +51,9 @@ if (NOT HAVE_LIBNCURSES)
 	CHECK_LIBRARY_EXISTS(curses tgetent "" HAVE_LIBCURSES)
 	if (NOT HAVE_LIBCURSES)
 		CHECK_LIBRARY_EXISTS(termcap tgetent "" HAVE_LIBTERMCAP)
+		if (NOT HAVE_LIBTERMCAP)
+			CHECK_LIBRARY_EXISTS(tinfo tgetent "" HAVE_LIBTINFO)
+		endif()
 	endif()
 endif()
 CHECK_C_SOURCE_COMPILES("
@@ -145,6 +148,7 @@ target_link_libraries(LIBEDIT INTERFACE
 	$<$<BOOL:${HAVE_LIBNCURSES}>:ncurses>
 	$<$<BOOL:${HAVE_LIBCURSES}>:curses>
 	$<$<BOOL:${HAVE_LIBTERMCAP}>:termcap>
+	$<$<BOOL:${HAVE_LIBTINFO}>:tinfo>
 )
 
 target_compile_options(LIBEDIT PRIVATE -g)
