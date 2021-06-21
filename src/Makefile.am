@@ -41,6 +41,9 @@ endif
 if !HAVE_STRLCAT
 libedit_la_SOURCES += strlcat.c
 endif
+if !HAVE_GETLINE
+libedit_la_SOURCES += getline.c
+endif
 if !HAVE_VIS
 libedit_la_SOURCES += vis.c
 endif

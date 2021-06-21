@@ -1,7 +1,6 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <dirent.h>
-#include <err.h>
 #include <limits.h>
 #include <locale.h>
 #include <signal.h>
@@ -9,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <histedit.h>
 
@@ -75,7 +75,9 @@ complete(EditLine *el, int ch)
 	mblen = MB_LEN_MAX * len + 1;
 	buf = bptr = malloc(mblen);
 	if (buf == NULL)
-		err(1, "malloc");
+		fprintf(stderr, "malloc: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+
 	for (i = 0; i < len; ++i) {
 		/* Note: really should test for -1 return from wctomb */
 		bptr += wctomb(bptr, ptr[i]);

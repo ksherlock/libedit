@@ -35,7 +35,7 @@ AM_INIT_AUTOMAKE
 AC_PROG_LIBTOOL
 
 # libtool -version-info
-AC_SUBST(LT_VERSION, [0:64:0])
+AC_SUBST(LT_VERSION, [0:65:0])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -119,7 +119,7 @@ AC_PROG_GCC_TRADITIONAL
 #AC_FUNC_REALLOC
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
-AC_CHECK_FUNCS([endpwent isascii memchr memset re_comp regcomp strcasecmp strchr strcspn strdup strerror strrchr strstr strtol issetugid wcsdup strlcpy strlcat getline vis strvis strunvis __secure_getenv secure_getenv])
+AC_CHECK_FUNCS([endpwent isascii memchr memset re_comp regcomp strcasecmp strchr strcspn strdup strerror strrchr strstr strtol issetugid wcsdup strlcpy strlcat vis strvis strunvis __secure_getenv secure_getenv])
 
 # strlcpy
 AC_CHECK_FUNC(strlcpy, found_strlcpy=yes, found_strlcpy=no)
@@ -128,6 +128,10 @@ AM_CONDITIONAL(HAVE_STRLCPY, [test "x$found_strlcpy" = xyes])
 # strlcat
 AC_CHECK_FUNC(strlcat, found_strlcat=yes, found_strlcat=no)
 AM_CONDITIONAL(HAVE_STRLCAT, [test "x$found_strlcat" = xyes])
+
+# getline
+AC_CHECK_FUNC(getline, found_getline=yes, found_getline=no)
+AM_CONDITIONAL(HAVE_GETLINE, [test "x$found_getline" = xyes])
 
 # vis
 AC_CHECK_FUNC(vis, found_vis=yes, found_vis=no)

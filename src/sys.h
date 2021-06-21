@@ -43,6 +43,7 @@
 #ifdef HAVE_SYS_CDEFS_H
 #include <sys/cdefs.h>
 #endif
+#include <sys/types.h>
 
 #if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__)  || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
 # define __attribute__(A)
@@ -82,17 +83,17 @@ typedef void	*ioctl_t;
 #include <stdio.h>
 
 #ifndef HAVE_STRLCAT
-#define	strlcat libedit_strlcat
+//#define	strlcat libedit_strlcat
 size_t	strlcat(char *dst, const char *src, size_t size);
 #endif
 
 #ifndef HAVE_STRLCPY
-#define	strlcpy libedit_strlcpy
+//#define	strlcpy libedit_strlcpy
 size_t	strlcpy(char *dst, const char *src, size_t size);
 #endif
 
 #ifndef HAVE_GETLINE
-#define	getline libedit_getline
+//#define	getline libedit_getline
 ssize_t	getline(char **line, size_t *len, FILE *fp);
 #endif
 

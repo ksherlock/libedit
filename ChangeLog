@@ -1,6 +1,21 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2021-04-19 Jess Thrysoee
+
+   * version-info: 0:65:0
+
+   * all: sync with upstream source
+
+   * src/getline.c,src/sys.h: Provide getline.c implementation if not available
+	Patch by Claes Nästén
+
+   * src/makelist: Use Posix locale; mainly to get ASCII character classes in e.g. `tr`
+	Patch by Claes Nästén
+
+  * examples/test_filecompletion.c, examples/wtc1.c: err.h not supported by
+  Solaris
+
 2021-02-16 Jess Thrysoee
 
    * version-info: 0:64:0

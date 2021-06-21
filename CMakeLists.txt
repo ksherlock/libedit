@@ -121,6 +121,7 @@ set(LIBEDIT_SRC
 	$<$<NOT:$<BOOL:${HAVE_VIS}>>:src/vis.c>
 	$<$<NOT:$<BOOL:${HAVE_UNVIS}>>:src/unvis.c>
 	$<$<NOT:$<BOOL:${HAVE_WCSDUP}>>:src/wcsdup.c>
+	$<$<NOT:$<BOOL:${HAVE_GETLINE}>>:src/getline.c>
 
 )
 
