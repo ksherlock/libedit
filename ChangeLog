@@ -1,6 +1,15 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2021-05-22 Jess Thrysoee
+
+   * version-info: 0:66:0
+
+   * all: sync with upstream source
+
+   * src/el.c: editrc not read on systems without issetugid
+	Patch by Trevor Cordes
+
 2021-04-19 Jess Thrysoee
 
    * version-info: 0:65:0
@@ -14,7 +23,7 @@
 	Patch by Claes Nästén
 
   * examples/test_filecompletion.c, examples/wtc1.c: err.h not supported by
-  Solaris
+	Solaris
 
 2021-02-16 Jess Thrysoee
 

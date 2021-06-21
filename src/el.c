@@ -548,15 +548,15 @@ el_source(EditLine *el, const char *fname)
 
 	fp = NULL;
 	if (fname == NULL) {
-#ifdef HAVE_ISSETUGID
-		if (issetugid())
-			return -1;
 
-		if ((fname = getenv("EDITRC")) == NULL) {
+		/* secure_getenv is guaranteed to be defined and do the right thing here */
+		/* because of the defines above which take into account issetugid, */
+		/* secure_getenv and __secure_getenv availability. */
+		if ((fname = secure_getenv("EDITRC")) == NULL) {
 			static const char elpath[] = "/.editrc";
 			size_t plen = sizeof(elpath);
 
-			if ((ptr = getenv("HOME")) == NULL)
+			if ((ptr = secure_getenv("HOME")) == NULL)
 				return -1;
 			plen += strlen(ptr);
 			if ((path = el_calloc(plen, sizeof(*path))) == NULL)
@@ -565,14 +565,7 @@ el_source(EditLine *el, const char *fname)
 				elpath + (*ptr == '\0'));
 			fname = path;
 		}
-#else
-		/*
-		 * If issetugid() is missing, always return an error, in order
-		 * to keep from inadvertently opening up the user to a security
-		 * hole.
-		 */
-		return -1;
-#endif
+
 	}
 	if (fname[0] == '\0')
 		return -1;
