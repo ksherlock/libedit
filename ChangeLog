@@ -1,6 +1,14 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2021-07-14 Jess Thrysoee
+
+   * all: sync with upstream source
+
+   * src/histedit.h: Add wcsdup declaration when ifndef HAVE_WCSDUP. Patch by Rainer Jung.
+
+   * examples/wtc1.c: Fix warnings and add missing brace. Patch by Rainer Jung.
+
 2021-05-22 Jess Thrysoee
 
    * version-info: 0:66:0

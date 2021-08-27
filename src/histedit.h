@@ -253,6 +253,10 @@ int		 tok_str(Tokenizer *, const char *,
 #include <wchar.h>
 #include <wctype.h>
 
+#ifndef HAVE_WCSDUP
+wchar_t * wcsdup(const wchar_t *str);
+#endif
+
 /*
  * ==== Editing ====
  */

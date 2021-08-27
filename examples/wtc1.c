@@ -18,7 +18,7 @@ volatile sig_atomic_t gotsig;
 static const char hfile[] = ".whistory";
 
 static wchar_t *
-prompt(EditLine *el)
+prompt(EditLine __attribute__((unused)) *el)
 {
 	static wchar_t a[] = L"\1\033[7m\1Edit$\1\033[0m\1 ";
 	static wchar_t b[] = L"Edit> ";
@@ -54,14 +54,15 @@ my_wcstombs(const wchar_t *wstr)
 
 
 static unsigned char
-complete(EditLine *el, int ch)
+complete(EditLine *el, int __attribute__((unused)) ch)
 {
 	DIR *dd = opendir(".");
 	struct dirent *dp;
 	const wchar_t *ptr;
 	char *buf, *bptr;
 	const LineInfoW *lf = el_wline(el);
-	int len, mblen, i;
+	int len, i;
+	size_t mblen;
 	unsigned char res = 0;
 	wchar_t dir[1024];
 
@@ -74,9 +75,10 @@ complete(EditLine *el, int ch)
 	wctomb(NULL, 0); /* Reset shift state */
 	mblen = MB_LEN_MAX * len + 1;
 	buf = bptr = malloc(mblen);
-	if (buf == NULL)
+	if (buf == NULL) {
 		fprintf(stderr, "malloc: %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
+	}
 
 	for (i = 0; i < len; ++i) {
 		/* Note: really should test for -1 return from wctomb */
@@ -107,7 +109,7 @@ complete(EditLine *el, int ch)
 
 
 int
-main(int argc, char *argv[])
+main(int  __attribute__((unused)) argc, char *argv[])
 {
 	EditLine *el = NULL;
 	int numc, ncontinuation;
