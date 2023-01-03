@@ -9,6 +9,9 @@
 /* Define to 1 if you have the <sys/cdefs.h> header file. */
 #cmakedefine HAVE_SYS_CDEFS_H
 
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine HAVE_SYS_TYPES_H
+
 /* Define to 1 if you have the <termcap.h> header file. */
 #cmakedefine HAVE_TERMCAP_H
 
@@ -55,6 +58,9 @@
 
 /* Define to 1 if you have the `wcsdup' function. */
 #cmakedefine HAVE_WCSDUP
+
+/* Define to 1 if you have the `reallocarr' function. */
+#cmakedefine HAVE_REALLOCARR
 
 /* Name of package */
 #cmakedefine PACKAGE "@PACKAGE@"

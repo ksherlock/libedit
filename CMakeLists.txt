@@ -47,6 +47,10 @@ CHECK_FUNCTION_EXISTS(unvis HAVE_UNVIS)
 SET(CMAKE_EXTRA_INCLUDE_FILES)
 
 
+SET(CMAKE_EXTRA_INCLUDE_FILES stdlib.h)
+CHECK_FUNCTION_EXISTS(reallocarr HAVE_REALLOCARR)
+SET(CMAKE_EXTRA_INCLUDE_FILES)
+
 CHECK_LIBRARY_EXISTS(ncurses tgetent "" HAVE_LIBNCURSES)
 if (NOT HAVE_LIBNCURSES)
 	CHECK_LIBRARY_EXISTS(curses tgetent "" HAVE_LIBCURSES)
@@ -57,6 +61,7 @@ if (NOT HAVE_LIBNCURSES)
 		endif()
 	endif()
 endif()
+
 CHECK_C_SOURCE_COMPILES("
 #include <stdlib.h>
 #include <sys/types.h>
@@ -123,6 +128,7 @@ set(LIBEDIT_SRC
 	$<$<NOT:$<BOOL:${HAVE_UNVIS}>>:src/unvis.c>
 	$<$<NOT:$<BOOL:${HAVE_WCSDUP}>>:src/wcsdup.c>
 	$<$<NOT:$<BOOL:${HAVE_GETLINE}>>:src/getline.c>
+	$<$<NOT:$<BOOL:${HAVE_REALLOCARR}>>:src/reallocarr.c>
 
 )
 

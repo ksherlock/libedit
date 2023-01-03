@@ -43,7 +43,10 @@
 #ifdef HAVE_SYS_CDEFS_H
 #include <sys/cdefs.h>
 #endif
+
+#if defined(HAVE_SYS_TYPES_H) && defined(__sun)
 #include <sys/types.h>
+#endif
 
 #if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__)  || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
 # define __attribute__(A)
@@ -95,6 +98,14 @@ size_t	strlcpy(char *dst, const char *src, size_t size);
 #ifndef HAVE_GETLINE
 //#define	getline libedit_getline
 ssize_t	getline(char **line, size_t *len, FILE *fp);
+#endif
+
+#ifndef HAVE_REALLOCARR
+int reallocarr(void *ptr, size_t number, size_t size);
+#endif
+
+#ifndef HAVE_WCSDUP
+wchar_t * wcsdup(const wchar_t *str);
 #endif
 
 #ifndef _DIAGASSERT

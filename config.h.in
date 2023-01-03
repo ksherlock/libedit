@@ -72,6 +72,9 @@
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
 
+/* Define to 1 if you have the `reallocarr' function. */
+#undef HAVE_REALLOCARR
+
 /* Define to 1 if you have the `regcomp' function. */
 #undef HAVE_REGCOMP
 
@@ -228,9 +231,6 @@
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
-
-/* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
 
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
