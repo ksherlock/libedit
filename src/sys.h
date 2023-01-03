@@ -40,10 +40,6 @@
 #ifndef _h_sys
 #define	_h_sys
 
-#ifdef HAVE_SYS_CDEFS_H
-#include <sys/cdefs.h>
-#endif
-
 #if defined(HAVE_SYS_TYPES_H) && defined(__sun)
 #include <sys/types.h>
 #endif
