@@ -1,4 +1,4 @@
-/*	$NetBSD: chartype.c,v 1.35 2019/07/23 10:18:52 christos Exp $	*/
+/*	$NetBSD: chartype.c,v 1.37 2023/08/10 20:38:00 mrg Exp $	*/
 
 /*-
  * Copyright (c) 2009 The NetBSD Foundation, Inc.
@@ -31,13 +31,14 @@
  */
 #include "config.h"
 #if !defined(lint) && !defined(SCCSID)
-__RCSID("$NetBSD: chartype.c,v 1.35 2019/07/23 10:18:52 christos Exp $");
+__RCSID("$NetBSD: chartype.c,v 1.37 2023/08/10 20:38:00 mrg Exp $");
 #endif /* not lint && not SCCSID */
 
 #include <ctype.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "el.h"
 
@@ -158,6 +159,8 @@ ct_decode_argv(int argc, const char *argv[], ct_buffer_t *conv)
 			return NULL;
 
 	wargv = el_calloc((size_t)(argc + 1), sizeof(*wargv));
+	if (wargv == NULL)
+		return NULL;
 
 	for (i = 0, p = conv->wbuff; i < argc; ++i) {
 		if (!argv[i]) {   /* don't pass null pointers to mbstowcs */
@@ -233,17 +236,17 @@ ct_visual_string(const wchar_t *s, ct_buffer_t *conv)
 		}
 
 		/* failed to encode, need more buffer space */
-		used = dst - conv->wbuff;
+		uintptr_t sused = (uintptr_t)dst - (uintptr_t)conv->wbuff;
 		if (ct_conv_wbuff_resize(conv, conv->wsize + CT_BUFSIZ) == -1)
 			return NULL;
-		dst = conv->wbuff + used;
+		dst = conv->wbuff + sused;
 	}
 
 	if (dst >= (conv->wbuff + conv->wsize)) { /* sigh */
-		used = dst - conv->wbuff;
+		uintptr_t sused = (uintptr_t)dst - (uintptr_t)conv->wbuff;
 		if (ct_conv_wbuff_resize(conv, conv->wsize + CT_BUFSIZ) == -1)
 			return NULL;
-		dst = conv->wbuff + used;
+		dst = conv->wbuff + sused;
 	}
 
 	*dst = L'\0';

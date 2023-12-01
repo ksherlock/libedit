@@ -96,7 +96,7 @@ size_t	strlcpy(char *dst, const char *src, size_t size);
 ssize_t	getline(char **line, size_t *len, FILE *fp);
 #endif
 
-#ifndef HAVE_REALLOCARR
+#ifndef HAVE_HAVE_REALLOCARR
 int reallocarr(void *ptr, size_t number, size_t size);
 #endif
 
