@@ -17,6 +17,7 @@ CHECK_INCLUDE_FILE(ncurses.h HAVE_NCURSES_H)
 CHECK_INCLUDE_FILE(sys/cdefs.h HAVE_SYS_CDEFS_H)
 CHECK_INCLUDE_FILE(termcap.h HAVE_TERMCAP_H)
 CHECK_INCLUDE_FILE(term.h HAVE_TERM_H)
+CHECK_INCLUDE_FILE(minix/config.h HAVE_MINIX_CONFIG_H)
 
 SET(CMAKE_EXTRA_INCLUDE_FILES stdio.h)
 CHECK_FUNCTION_EXISTS(getline HAVE_GETLINE)
@@ -84,9 +85,55 @@ void main(void) {
 "
 HAVE_GETPW_R_DRAFT)
 
+
+CHECK_C_SOURCE_COMPILES("
+#include <wchar.h>
+mbstate_t x;
+int main (void) {
+  return 0;
+}
+"
+NO_XOPEN_SOURCE)
+if (NOT NO_XOPEN_SOURCE)
+	CHECK_C_SOURCE_COMPILES("
+	#define _XOPEN_SOURCE 500
+	#include <wchar.h>
+	mbstate_t x;
+	int main (void) {
+	  return 0;
+	}
+	"
+	_XOPEN_SOURCE)
+endif()
+
 set(VERSION "3.1")
 set(PACKAGE_NAME "libedit")
 set(PACKAGE_STRING "libedit 3.1")
+
+set(_ALL_SOURCE 1)
+set(_DARWIN_C_SOURCE 1)
+set(__EXTENSIONS__ 1)
+set(_GNU_SOURCE 1)
+set(_HPUX_ALT_XOPEN_SOCKET_API 1)
+set(_NETBSD_SOURCE 1)
+set(_OPENBSD_SOURCE 1)
+set(_POSIX_PTHREAD_SEMANTICS 1)
+set(__STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1)
+set(__STDC_WANT_IEC_60559_BFP_EXT__ 1)
+set(__STDC_WANT_IEC_60559_DFP_EXT__ 1)
+set(__STDC_WANT_IEC_60559_FUNCS_EXT__ 1)
+set(__STDC_WANT_IEC_60559_TYPES_EXT__ 1)
+set(__STDC_WANT_LIB_EXT2__ 1)
+set(__STDC_WANT_MATH_SPEC_FUNCS__ 1)
+set(_TANDEM_SOURCE 1)
+
+if (HAVE_MINIX_CONFIG_H)
+	set(_MINIX 1)
+	set(_POSIX_SOURCE 1)
+	set(_POSIX_1_SOURCE 2)
+endif()
+
+# TODO -- __EXTENSIONS__
 
 configure_file(config.h.cmake config.h)
 
