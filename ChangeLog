@@ -1,6 +1,10 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2024-05-17 Jess Thrysoee
+
+   * all: sync with upstream source
+
 2023-08-28 Jess Thrysoee
 
    * src/chartype.c: Add missing stdint.h
